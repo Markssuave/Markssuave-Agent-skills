@@ -647,3 +647,10 @@ These are specialized AI agent "skills" — pre-packaged sets of instructions, g
 - **What it does:** Drafts self-contained modular paragraphs and snippets for documentation.
 - **Folder:** `skills/write-snippets`
 
+
+## Installed Skills & References
+This repository utilizes the following third-party Agent Skills:
+* **Caveman**: [https://github.com/JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)
+* **Impeccable**: [https://github.com/pbakaus/impeccable](https://github.com/pbakaus/impeccable)
+* **Pocock Skills**: [https://github.com/mattpocock/skills](https://github.com/mattpocock/skills)
+* **Ponytail**: [https://github.com/DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)
