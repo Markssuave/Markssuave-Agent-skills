@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Codex Annotator for Antigravity",
+  "version": "1.0.0",
+  "description": "Inspect and annotate UI elements directly into Antigravity with Ctrl+Shift+A",
+  "icons": {
+    "128": "icon.png"
+  },
+  "action": {
+    "default_title": "Codex Annotator (Ctrl+Shift+A)",
+    "default_icon": "icon.png"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:3456/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost/*",
+        "http://127.0.0.1/*",
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "toggle-annotator": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+A",
+        "mac": "Command+Shift+A"
+      },
+      "description": "Toggle Codex UI Annotator"
+    }
+  }
+}

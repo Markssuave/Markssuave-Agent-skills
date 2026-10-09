@@ -1,0 +1,10 @@
+{
+  "selector": "a.bookmarklet-btn",
+  "componentName": "Unknown Component",
+  "tagName": "a",
+  "text": "\ud83c\udfaf Codex Annotate",
+  "outerHTML": "<a class=\"bookmarklet-btn\" href=\"javascript:(function(){const s=document.createElement('script');s.src='http://127.0.0.1:3456/annotator.js';document.body.appendChild(s);})();\">\ud83c\udfaf Codex Annotate</a>",
+  "url": "http://127.0.0.1:3456/",
+  "instruction": "hhhh",
+  "timestamp": "2026-10-05T12:36:27.691Z"
+}
