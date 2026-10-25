@@ -10,7 +10,7 @@ BUILTIN_DIR = r"C:\Users\Mark Vasquez\.gemini\antigravity\builtin\skills"
 # Master 102 Reorganized Skills Map: (old_name -> (new_name, layman_description))
 SKILL_MAP = {
     # 1. Planning, Product & Architecture (10)
-    "to-spec": ("plan-spec", "Turns your rough idea into a complete, clear blueprint before building."),
+    "maxplan": ("maxplan", "Plans the requested work and recommends the relevant skills when the user invokes /maxplan."),
     "to-tickets": ("plan-tickets", "Breaks a large blueprint down into bite-sized, sequential to-do tasks."),
     "domain-modeling": ("plan-domain", "Defines the business vocabulary and real-world concepts your project uses so everyone is aligned."),
     "codebase-design": ("arch-design", "Designs clean boundaries between components so code stays simple to update and test later."),
@@ -123,11 +123,15 @@ SKILL_MAP = {
     "brag": ("show-video", "Automatically turns your web project into a polished, animated showcase launch video."),
     "brag-slim": ("show-video-quick", "Creates a fast, lightweight showcase video with music and copy with no external assets needed."),
 
-    # 10. Writing, Knowledge & Agent Customization (13)
+    # 10. Writing, Knowledge & Agent Customization (15)
     "writing-for-agents": ("write-agent-rules", "Writes crystal-clear instructions for AI agents so they follow your rules."),
     "writing-shape": ("write-outline", "Plans out the structural outline for long technical articles or documentation."),
     "writing-beats": ("write-pacing", "Plans the narrative flow and key highlights for technical explainers."),
     "writing-fragments": ("write-snippets", "Drafts self-contained modular paragraphs and snippets for documentation."),
+    "write-humanize": ("write-humanize", "Rewrites AI-sounding prose and documentation to read with natural, human cadence without altering core facts."),
+    "humanizer": ("humanizer", "Alias for /write-humanize to strip AI writing tells and restore natural human cadence."),
+    "doc-markitdown": ("doc-markitdown", "Converts documents (PDF, Word, Excel, PowerPoint, audio, HTML) into clean, structured Markdown using Microsoft MarkItDown."),
+    "markitdown": ("markitdown", "Alias for /doc-markitdown to convert Office docs and PDFs into Markdown."),
     "research": ("knowledge-research", "Digs through authoritative documentation and saves a research summary in markdown."),
     "handoff": ("knowledge-handoff", "Summarizes current work state so another agent or session can take over seamlessly."),
     "claude-handoff": ("knowledge-handoff-claude", "Packages session notes formatted specifically for Claude Code transitions."),
@@ -244,6 +248,14 @@ def find_source_skill_dirs():
     if os.path.exists(iso_dir):
         sources["dev-isolated"] = iso_dir
 
+    # User-authored Codex skills in this repository take precedence over imported copies.
+    custom_skills_dir = os.path.join(ROOT_DIR, "skills")
+    if os.path.exists(custom_skills_dir):
+        for item in os.listdir(custom_skills_dir):
+            p = os.path.join(custom_skills_dir, item)
+            if os.path.isdir(p) and os.path.exists(os.path.join(p, "SKILL.md")):
+                sources[item] = p
+
     return sources
 
 def main():
@@ -274,9 +286,7 @@ def main():
         if old_name in sources:
             src_path = sources[old_name]
             # Copy source directory to target
-            if os.path.exists(dest_path):
-                shutil.rmtree(dest_path, ignore_errors=True)
-            shutil.copytree(src_path, dest_path)
+            shutil.copytree(src_path, dest_path, dirs_exist_ok=True)
             # Update SKILL.md frontmatter
             skill_md = os.path.join(dest_path, "SKILL.md")
             update_skill_frontmatter(skill_md, new_name, layman_desc)
