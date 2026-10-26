@@ -1,10 +1,10 @@
 {
-  "selector": "a.bookmarklet-btn",
-  "componentName": "Unknown Component",
-  "tagName": "a",
-  "text": "\ud83c\udfaf Codex Annotate",
-  "outerHTML": "<a class=\"bookmarklet-btn\" href=\"javascript:(function(){const s=document.createElement('script');s.src='http://127.0.0.1:3456/annotator.js';document.body.appendChild(s);})();\">\ud83c\udfaf Codex Annotate</a>",
-  "url": "http://127.0.0.1:3456/",
-  "instruction": "hhhh",
-  "timestamp": "2026-10-05T12:36:27.691Z"
+  "selector": "div.rounded-2xl.border.border-slate-200/80",
+  "componentName": "ExperienceSection",
+  "tagName": "div",
+  "text": "1\n2",
+  "outerHTML": "<div class=\"rounded-2xl border border-slate-200/80 bg-white/80 p-1.5 sm:p-2 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80 shadow-xs flex flex-col items-center text-center\"><button type=\"button\" title=\"Milestone 1: Internship\" aria-label=\"Scroll to Milestone 1: Internship\" class=\"grid h-8 w-8 place-items-center rounded-xl text-xs font-mono font-bold transition-all cursor-pointer shado",
+  "url": "http://localhost:3000/#experience",
+  "instruction": "i want to remove this because we already have this at the center",
+  "timestamp": "2026-10-15T05:48:27.692Z"
 }

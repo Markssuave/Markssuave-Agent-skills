@@ -367,10 +367,10 @@ These are specialized AI agent "skills" — pre-packaged sets of instructions, g
 - **What it does:** Looks back at what went well and what went wrong after finishing a milestone.
 - **Folder:** `skills/plan-retro`
 
-### `plan-spec`
+### `maxplan`
 - **Origin:** Matt Pocock Engineering Suite
 - **What it does:** Turns your rough idea into a complete, clear blueprint before building.
-- **Folder:** `skills/plan-spec`
+- **Folder:** `skills/maxplan`
 
 ### `plan-tickets`
 - **Origin:** Matt Pocock Engineering Suite
@@ -648,9 +648,22 @@ These are specialized AI agent "skills" — pre-packaged sets of instructions, g
 - **Folder:** `skills/write-snippets`
 
 
+### write-humanize (formerly humanizer)
+- **Origin:** [https://github.com/blader/humanizer](https://github.com/blader/humanizer)
+- **What it does:** Rewrites AI-sounding prose and documentation to read with natural, human cadence without altering core facts.
+- **Folder:** skills/write-humanize (alias skills/humanizer)
+
+### doc-markitdown (formerly markitdown)
+- **Origin:** [https://github.com/microsoft/markitdown](https://github.com/microsoft/markitdown)
+- **What it does:** Converts documents (PDF, Word, Excel, PowerPoint, audio, HTML) into clean, structured Markdown using Microsoft MarkItDown.
+- **Folder:** skills/doc-markitdown (alias skills/markitdown)
+
+
 ## Installed Skills & References
 This repository utilizes the following third-party Agent Skills:
 * **Caveman**: [https://github.com/JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)
+* **Humanizer**: [https://github.com/blader/humanizer](https://github.com/blader/humanizer)
+* **MarkItDown**: [https://github.com/microsoft/markitdown](https://github.com/microsoft/markitdown)
 * **Impeccable**: [https://github.com/pbakaus/impeccable](https://github.com/pbakaus/impeccable)
 * **Pocock Skills**: [https://github.com/mattpocock/skills](https://github.com/mattpocock/skills)
 * **Ponytail**: [https://github.com/DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)

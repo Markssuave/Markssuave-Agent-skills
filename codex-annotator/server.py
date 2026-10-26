@@ -1,5 +1,6 @@
 import json
 import os
+import subprocess
 import sys
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -15,6 +16,57 @@ def save_annotation(data):
             json.dump(data, f, indent=2)
     except Exception as e:
         sys.stderr.write(f"Failed to write annotation file: {e}\n")
+
+def send_to_antigravity_window(data):
+    """
+    Writes the prompt to latest_prompt.txt and launches a detached PowerShell
+    process to copy it to clipboard, focus Antigravity, and send Ctrl+V and Enter.
+    """
+    prompt = (
+        f"🎯 **UI Annotation Request**\n"
+        f"- **Page**: {data.get('url', 'N/A')}\n"
+        f"- **Component**: `{data.get('componentName', 'Unknown')}`\n"
+        f"- **Selector**: `{data.get('selector', 'N/A')}`\n"
+        f"- **Instruction**: **{data.get('instruction', 'Inspect and fix this element')}**\n"
+    )
+    if data.get('text'):
+        prompt += f"- **Text**: \"{data.get('text')}\"\n"
+    if data.get('outerHTML'):
+        prompt += f"- **HTML Snippet**:\n```html\n{data.get('outerHTML')[:350]}\n```\n"
+
+    prompt_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "latest_prompt.txt")
+    try:
+        with open(prompt_file, "w", encoding="utf-8") as f:
+            f.write(prompt)
+    except Exception as e:
+        sys.stderr.write(f"Failed to write prompt file: {e}\n")
+        return
+
+    escaped_file = prompt_file.replace("'", "''")
+    ps_cmd = (
+        f"$p = Get-Content -Raw -Encoding utf8 '{escaped_file}'; "
+        f"Set-Clipboard -Value $p; "
+        f"$ws = New-Object -ComObject WScript.Shell; "
+        f"$act = $ws.AppActivate('Antigravity'); "
+        f"if (-not $act) {{ "
+        f"  $proc = Get-Process Antigravity -ErrorAction SilentlyContinue | Select-Object -First 1; "
+        f"  if ($proc) {{ $act = $ws.AppActivate($proc.Id); }} "
+        f"}} "
+        f"if ($act) {{ "
+        f"  Start-Sleep -Milliseconds 220; "
+        f"  $ws.SendKeys('^v'); "
+        f"  Start-Sleep -Milliseconds 120; "
+        f"  $ws.SendKeys('{{ENTER}}'); "
+        f"}}"
+    )
+
+    try:
+        subprocess.Popen(
+            ["powershell", "-NoProfile", "-NonInteractive", "-Command", ps_cmd],
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)
+        )
+    except Exception as e:
+        sys.stderr.write(f"Failed to launch PowerShell auto-submit: {e}\n")
 
 class AnnotationHTTPHandler(BaseHTTPRequestHandler):
     def _send_cors_headers(self):
@@ -79,6 +131,9 @@ class AnnotationHTTPHandler(BaseHTTPRequestHandler):
                 data = json.loads(body.decode("utf-8"))
                 save_annotation(data)
                 
+                # Auto-submit into Antigravity chat window
+                threading.Thread(target=send_to_antigravity_window, args=(data,), daemon=True).start()
+
                 # Log to stderr (so stdio MCP stdout stays clean)
                 sys.stderr.write(f"\n[Codex Annotator] 🎯 Received annotation for: {data.get('selector', 'unknown')}\n")
                 sys.stderr.write(f"[Codex Annotator] 💬 Instruction: {data.get('instruction', '')}\n\n")
