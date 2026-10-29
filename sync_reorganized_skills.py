@@ -82,6 +82,10 @@ SKILL_MAP = {
     "impeccable-live": ("ui-live-tweak", "Lets you see and test AI design changes live in your running web browser."),
     "impeccable-generate": ("ui-variants", "Generates multiple design options for a component so you can pick the best one."),
     "impeccable-craft": ("ui-craft", "Ensures designs meet strict senior craftsmanship standards."),
+    "taste-skill": ("taste-skill", "tasteskill v2, the anti-slop frontend skill for intentional art direction and curated layouts."),
+    "design-taste-frontend": ("design-taste-frontend", "Alias for /taste-skill. Tasteskill v2, the anti-slop frontend skill for intentional art direction and curated layouts."),
+    "ui-ux-pro-max": ("ui-ux-pro-max", "UI/UX design intelligence database with 79 UI styles, 192 color palettes, 74 font pairings, 119 UX guidelines, and 25 chart types."),
+    "ui-ux-pro-max-skill": ("ui-ux-pro-max-skill", "Alias for /ui-ux-pro-max. Design intelligence database with 79 UI styles, 192 color palettes, 74 font pairings, 119 UX guidelines, and 25 chart types."),
 
     # 6. Code Review, Refactoring & Cleanup (6)
     "code-review": ("review-deep", "Runs thorough parallel checks to ensure code matches requirements and high standards."),

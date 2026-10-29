@@ -1,6 +1,6 @@
 # 🧠 Markssuave Agent Skills
 
-A master collection of **134 specialized AI agent skills** to supercharge your AI pair-programming workflows across **Codex**, **Claude Code**, and **Google Antigravity / Gemini**!
+A master collection of **137 specialized AI agent skills** to supercharge your AI pair-programming workflows across **Codex**, **Claude Code**, and **Google Antigravity / Gemini**!
 
 ---
 
@@ -15,10 +15,10 @@ A master collection of **134 specialized AI agent skills** to supercharge your A
 - **For Antigravity / Gemini IDE Users:**
   - Load [GEMINI.md](GEMINI.md) as your project or system rules.
   - Type /plan in prompts to trigger the native IDE confirmation plan gate with interactive choice cards.
-  - Use /plan-spec to generate formal requirement blueprints.
+  - Use /taste-skill and /ui-ux-pro-max for curated frontend art direction and design intelligence.
 
 ### 2. Auto-Install All Skills
-To automatically copy and synchronize all 134 skills into your local agent skills folder, run:
+To automatically copy and synchronize all 137 skills into your local agent skills folder, run:
 `ash
 python sync_reorganized_skills.py
 `
@@ -29,8 +29,6 @@ This script sets up clean directories, validates SKILL.md frontmatter, and links
 ## 🔗 Installed Skills & Upstream References
 This repository builds upon and reorganizes the following industry-leading Agent Skills:
 * **Caveman**: [https://github.com/JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman)
-* **Humanizer**: [https://github.com/blader/humanizer](https://github.com/blader/humanizer)
-* **MarkItDown**: [https://github.com/microsoft/markitdown](https://github.com/microsoft/markitdown)
 * **Impeccable**: [https://github.com/pbakaus/impeccable](https://github.com/pbakaus/impeccable)
 * **Pocock Skills**: [https://github.com/mattpocock/skills](https://github.com/mattpocock/skills)
 * **Ponytail**: [https://github.com/DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)
@@ -184,6 +182,11 @@ This repository builds upon and reorganizes the following industry-leading Agent
 - **What it does:** Hands off background tasks to sub-agents so our main conversation doesn't get clogged.
 - **Folder:** [skills/delegate-subagents](skills/delegate-subagents)
 
+### /design-taste-frontend [Alias]
+- **Origin:** Tasteskill v2 Curated Art Direction (Frontend, UI/UX & Design)
+- **What it does:** Alias for /taste-skill. Tasteskill v2, the anti-slop frontend skill for intentional art direction and curated layouts.
+- **Folder:** [skills/design-taste-frontend](skills/design-taste-frontend)
+
 ### /dev-authjs
 - **Origin:** Backend & Cloud Infrastructure (Backend, Databases & Cloud Infrastructure)
 - **What it does:** Implements secure, industry-standard authentication flows and session management using NextAuth/Auth.js.
@@ -284,9 +287,9 @@ This repository builds upon and reorganizes the following industry-leading Agent
 - **What it does:** Displays a quick cheat-sheet for minimalist coding commands.
 - **Folder:** [skills/help-ponytail](skills/help-ponytail)
 
-### /humanizer
+### /humanizer [Alias]
 - **Origin:** Writing, Knowledge & Agents (Writing, Knowledge & Agent Customization)
-- **What it does:** Rewrites AI-sounding prose and documentation to read with natural, human cadence without altering core facts.
+- **What it does:** Alias for /write-humanize to strip AI writing tells and restore natural human cadence.
 - **Folder:** [skills/humanizer](skills/humanizer)
 
 ### /knowledge-handoff
@@ -319,14 +322,14 @@ This repository builds upon and reorganizes the following industry-leading Agent
 - **What it does:** Manages and approves experiments to test AI cost reductions.
 - **Folder:** [skills/manage-experiments](skills/manage-experiments)
 
-### /markitdown
+### /markitdown [Alias]
 - **Origin:** Writing, Knowledge & Agents (Writing, Knowledge & Agent Customization)
-- **What it does:** Converts documents (PDF, Word, Excel, PowerPoint, audio, HTML) into clean, structured Markdown using Microsoft MarkItDown.
+- **What it does:** Alias for /doc-markitdown to convert Office docs and PDFs into Markdown.
 - **Folder:** [skills/markitdown](skills/markitdown)
 
 ### /maxplan
 - **Origin:** Codex Workflow Protocol (Planning, Product & Architecture)
-- **What it does:** Use this workflow when the user types /maxplan or $maxplan. Plan the requested work and recommend only the skills relevant to it; do not execute the task.
+- **What it does:** Plans the requested work and recommends the relevant skills when the user invokes /maxplan.
 - **Folder:** [skills/maxplan](skills/maxplan)
 
 ### /migrate-workflows
@@ -418,11 +421,6 @@ This repository builds upon and reorganizes the following industry-leading Agent
 - **Origin:** Matt Pocock Engineering Suite (Planning, Product & Architecture)
 - **What it does:** Looks back at what went well and what went wrong after finishing a milestone.
 - **Folder:** [skills/plan-retro](skills/plan-retro)
-
-### /plan-spec
-- **Origin:** Matt Pocock Engineering Suite (Planning, Product & Architecture)
-- **What it does:** Turns your rough idea into a complete, clear blueprint before building.
-- **Folder:** [skills/plan-spec](skills/plan-spec)
 
 ### /plan-tickets
 - **Origin:** Matt Pocock Engineering Suite (Planning, Product & Architecture)
@@ -528,6 +526,11 @@ This repository builds upon and reorganizes the following industry-leading Agent
 - **Origin:** Caveman Token Optimization Suite (Efficiency, Context & Token Optimization)
 - **What it does:** Shows how many tokens and cache reads we have used so far.
 - **Folder:** [skills/stats-tokens](skills/stats-tokens)
+
+### /taste-skill
+- **Origin:** Tasteskill v2 Curated Art Direction (Frontend, UI/UX & Design)
+- **What it does:** tasteskill v2, the anti-slop frontend skill. Art direction for websites, distilled from a study of 247 curated gallery sites (One Page Love, Awwwards Sites of the Day). Deals researched directions (idea, composition, type, palette, photographs, section blueprints) from a library, enforces a strict no-slop house style with a real-browser inspector, and runs a look-and-fix loop on screenshots. Use this whenever you build, design, redesign, restyle, polish or review a landing page, marketing site, portfolio, product page, one-pager, hero or any public-facing web page, in any stack (HTML/CSS, React, Next.js, Vue, Svelte, Astro, Tailwind) — also when the user says a page looks generic, templated, "AI-made", sloppy, or asks to make it look designed, premium, award-level or less like every other site. Also for app screens: dashboards, admin and analytics views, settings, inboxes and other screens people work in, with their own run and rules.
+- **Folder:** [skills/taste-skill](skills/taste-skill)
 
 ### /trace-workflows
 - **Origin:** Caveman Token Optimization Suite (Efficiency, Context & Token Optimization)
@@ -678,6 +681,16 @@ This repository builds upon and reorganizes the following industry-leading Agent
 - **Origin:** Impeccable UI/UX Suite (Frontend, UI/UX & Design)
 - **What it does:** Fixes font pairings, text hierarchy, line spacing, and readability.
 - **Folder:** [skills/ui-typography](skills/ui-typography)
+
+### /ui-ux-pro-max
+- **Origin:** UI/UX Pro Max Design Intelligence (Frontend, UI/UX & Design)
+- **What it does:** UI/UX design intelligence for web, mobile, and desktop. This skill should be used when designing, building, reviewing, or fixing interfaces, including pages, components, design systems, accessibility, interaction, responsive layout, typography, color, charts, and stack-specific UI implementation. Searchable local data: 79 searchable styles (50 active), 192 product palettes and reasoning profiles, 74 font pairings, 119 UX guidelines, 105 icons, 17 GSAP presets, 25 chart types, and 22 stacks.
+- **Folder:** [skills/ui-ux-pro-max](skills/ui-ux-pro-max)
+
+### /ui-ux-pro-max-skill [Alias]
+- **Origin:** UI/UX Pro Max Design Intelligence (Frontend, UI/UX & Design)
+- **What it does:** Alias for /ui-ux-pro-max. Design intelligence database with 79 UI styles, 192 color palettes, 74 font pairings, 119 UX guidelines, and 25 chart types.
+- **Folder:** [skills/ui-ux-pro-max-skill](skills/ui-ux-pro-max-skill)
 
 ### /ui-variants
 - **Origin:** Impeccable UI/UX Suite (Frontend, UI/UX & Design)

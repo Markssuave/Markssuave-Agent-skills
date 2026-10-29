@@ -1,7 +1,7 @@
 ---
 name: markitdown
 description: >-
-  Converts documents (PDF, Word, Excel, PowerPoint, audio, HTML) into clean, structured Markdown using Microsoft MarkItDown.
+  Alias for /doc-markitdown to convert Office docs and PDFs into Markdown.
 ---
 
 <what-to-do>

@@ -1,7 +1,7 @@
 ---
 name: humanizer
 description: >-
-  Rewrites AI-sounding prose and documentation to read with natural, human cadence without altering core facts.
+  Alias for /write-humanize to strip AI writing tells and restore natural human cadence.
 ---
 
 <what-to-do>

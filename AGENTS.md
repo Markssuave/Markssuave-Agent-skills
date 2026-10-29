@@ -43,7 +43,7 @@ For every prompt involving coding, architecture, debugging, or planning:
 
 ---
 
-## 🗂️ Master 114-Skill Slash Command Directory (By Role)
+## 🗂️ Master 116-Skill Slash Command Directory (By Role)
 
 ### 1. Planning, Product & Architecture (13 Skills)
 - **/arch-node-best**: Audits the codebase against the massive Node.js best practices compendium.
@@ -92,8 +92,10 @@ For every prompt involving coding, architecture, debugging, or planning:
 - **/qa-quick-review** *(formerly `caveman-review`)*: Delivers an ultra-brief, one-line-per-finding quality check on code changes.
 - **/qa-scaffold** *(formerly `scaffold-exercises`)*: Generates structured test exercises, problems, and solutions for learning repos.
 
-### 5. Frontend, UI/UX & Design (25 Skills)
+### 5. Frontend, UI/UX & Design (27 Skills)
 - **/ui-master** *(formerly `impeccable`)*: Master design director for elevating visual design, usability, and UX.
+- **/taste-skill**: Anti-slop frontend art direction distilled from 247 curated gallery sites with browser verification loops.
+- **/ui-ux-pro-max**: Comprehensive design intelligence database (79 styles, 192 product palettes, 74 font pairings, 119 UX guidelines, 25 chart types).
 - **/ui-init** *(formerly `impeccable-init`)*: Discovers brand identity and sets up design guidelines (`PRODUCT.md` & `DESIGN.md`).
 - **/ui-shape** *(formerly `impeccable-shape`)*: Plans screen layouts and user flows before writing any frontend code.
 - **/ui-critique** *(formerly `impeccable-critique`)*: Evaluates screens from a human user’s perspective for clunkiness and visual clutter.

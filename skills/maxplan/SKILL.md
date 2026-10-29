@@ -1,6 +1,7 @@
 ---
 name: maxplan
-description: Use this workflow when the user types /maxplan or $maxplan. Plan the requested work and recommend only the skills relevant to it; do not execute the task.
+description: >-
+  Plans the requested work and recommends the relevant skills when the user invokes /maxplan.
 ---
 
 # Maxplan
