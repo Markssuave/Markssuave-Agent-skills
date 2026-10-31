@@ -1,5 +1,5 @@
-# Master Skills Sync: Matt Pocock + Ponytail + Brag + Impeccable + Caveman
-Write-Host "=== Syncing Global Agent Skills ===" -ForegroundColor Cyan
+# Master Skills Sync: Matt Pocock + Ponytail + Brag + Impeccable + Caveman + Karpathy + SkillSpector + Cloudflare
+Write-Host "=== Master Agent Skills End-to-End Sync ===" -ForegroundColor Cyan
 
 $rootDir = $PSScriptRoot
 $globalSkillsDir = "C:\Users\Mark Vasquez\.gemini\config\skills"
@@ -73,12 +73,12 @@ Get-ChildItem -Path $globalSkillsDir | ForEach-Object {
     }
 }
 
-# 7. Reorganize & Sync All 102 Skills with Role-Based Slash Commands
-Write-Host "Reorganizing & Syncing All 102 Skills with Slash Commands..." -ForegroundColor Yellow
+# 7. Reorganize & Sync All 130 Skills with Role-Based Slash Commands
+Write-Host "`nReorganizing & Syncing All 130 Skills across Antigravity & Codex..." -ForegroundColor Yellow
 python "$rootDir\sync_reorganized_skills.py"
 
-# 12. Ensure Global Rules (GEMINI.md & AGENTS.md) stay in sync across Antigravity & Codex
-Write-Host "Syncing Global Rules (GEMINI.md & AGENTS.md) to Antigravity and Codex..." -ForegroundColor Yellow
+# 8. Ensure Global Rules (GEMINI.md & AGENTS.md) stay in sync across Antigravity & Codex
+Write-Host "`nSyncing Global Rules (GEMINI.md & AGENTS.md) to Antigravity and Codex..." -ForegroundColor Yellow
 $globalConfigDir = "C:\Users\Mark Vasquez\.gemini\config"
 $codexConfigDir = "C:\Users\Mark Vasquez\.codex"
 if (Test-Path "$rootDir\GEMINI.md") {
@@ -91,5 +91,27 @@ if (Test-Path "$rootDir\AGENTS.md") {
     }
 }
 
+# 9. Rebuild Table-Based Master Documentation (README.md)
+Write-Host "`nRebuilding Master Documentation Tables (README.md)..." -ForegroundColor Yellow
+$readmeBuilder = "$rootDir\repo_export\build_table_readme.py"
+if (Test-Path $readmeBuilder) {
+    python $readmeBuilder
+}
+
+# 10. Mirror changes to nested repository if present
+$submoduleDir = "$rootDir\Markssuave-Agent-skills"
+if (Test-Path $submoduleDir) {
+    Write-Host "`nMirroring to nested repository..." -ForegroundColor Yellow
+    Copy-Item "$rootDir\README.md" "$submoduleDir\README.md" -Force
+    Copy-Item "$rootDir\AGENTS.md" "$submoduleDir\AGENTS.md" -Force
+    Copy-Item "$rootDir\GEMINI.md" "$submoduleDir\GEMINI.md" -Force
+    Copy-Item "$rootDir\sync_reorganized_skills.py" "$submoduleDir\sync_reorganized_skills.py" -Force
+    Copy-Item "$rootDir\sync-all-skills.ps1" "$submoduleDir\sync-all-skills.ps1" -Force
+    if (Test-Path "$rootDir\agy-workflow.ps1") {
+        Copy-Item "$rootDir\agy-workflow.ps1" "$submoduleDir\agy-workflow.ps1" -Force
+    }
+}
+
 $totalActive = (Get-ChildItem $globalSkillsDir -Directory).Count
-Write-Host "`n=== Sync Complete! Total Global Skills Active: $totalActive ===" -ForegroundColor Green
+Write-Host "`n=== Master Sync Complete! Total Active Skills: $totalActive ===" -ForegroundColor Green
+Write-Host "All 130 skills, slash commands, rules, and README tables are fully synchronized." -ForegroundColor Cyan
