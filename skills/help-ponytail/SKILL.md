@@ -26,7 +26,7 @@ Level sticks until changed or session end.
 | **ponytail** | `/ponytail` | Lazy mode itself: least new code, clear replies that name skipped work and risks. |
 | **ponytail-review** | `/ponytail-review` | Quality review of a diff: bugs, security, load, missing tests, speed, what to cut. Each finding says what goes wrong and how to fix it. |
 | **ponytail-audit** | `/ponytail-audit` | The same quality review for the whole repo, ranked. |
-| **ponytail-debt** | `/ponytail-debt` | Harvest `ponytail:` shortcut comments into a tracked ledger. |
+| **ponytail-debt** | `/ponytail-debt` | Harvest `shortcut:` comments into a tracked ledger. |
 | **ponytail-gain** | `/ponytail-gain` | Measured-impact scoreboard: less code, less cost, more speed. |
 | **ponytail-help** | `/ponytail-help` | This card. |
 
@@ -38,6 +38,12 @@ slash-command forms above (OpenCode ships all six as slash commands).
 
 Say "stop ponytail" or "normal mode". Resume anytime with `/ponytail`.
 `/ponytail off` also works.
+
+## Band (Claude Code)
+
+`/ponytail band` hides the band above the prompt, the same command brings it back.
+`/ponytail band on` and `/ponytail band off` set it directly. The level stays.
+`/ponytail band import` adds your past Claude Code sessions (cost, agent time, tokens) to the board.
 
 ## Configure Default Mode
 
