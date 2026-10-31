@@ -6,4 +6,4 @@ description: >-
 
 # Design Taste Frontend
 
-This skill is an alias for `/taste-skill`. Please refer to and execute [taste-skill](file:///C:/Users/Mark%20Vasquez/.gemini/config/skills/taste-skill/SKILL.md).
+This skill is an alias for `/taste-skill`. Activate and follow the `taste-skill` workflow for intentional art direction, layout structure, and visual verification.

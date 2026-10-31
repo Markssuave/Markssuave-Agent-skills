@@ -6,4 +6,4 @@ description: >-
 
 # UI/UX Pro Max Skill
 
-This skill is an alias for `/ui-ux-pro-max`. Please refer to and execute [ui-ux-pro-max](file:///C:/Users/Mark%20Vasquez/.gemini/config/skills/ui-ux-pro-max/SKILL.md).
+This skill is an alias for `/ui-ux-pro-max`. Activate and follow the `ui-ux-pro-max` workflow for design intelligence, palettes, typography pairings, and UX guidelines.

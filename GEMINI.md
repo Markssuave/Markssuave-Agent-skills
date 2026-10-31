@@ -46,7 +46,16 @@ For every prompt involving coding, architecture, debugging, or planning:
 
 ---
 
-## 🗂️ Master 116-Skill Slash Command Directory (By Role)
+## 🎯 Andrej Karpathy Coding Guardrails (Always-On)
+Apply these four behavioral principles to all non-trivial coding tasks:
+1. **Think Before Coding**: State assumptions explicitly. Ask when uncertain. Present multiple interpretations when ambiguity exists instead of picking silently. Push back when a simpler approach exists.
+2. **Simplicity First**: Write the minimum code that solves the problem. No unrequested features, single-use abstractions, speculative configurability, or impossible-scenario error handling.
+3. **Surgical Changes**: Touch only what the request requires. Do not modify, reformat, or "improve" adjacent code or comments. Clean up only orphans created by your own edits; mention pre-existing dead code without deleting it.
+4. **Goal-Driven Execution**: Define verifiable success criteria before coding (`[Step] -> verify: [check]`) and loop until verified.
+
+---
+
+## 🗂️ Master 126-Skill Slash Command Directory (By Role)
 
 ### 1. Planning, Product & Architecture (13 Skills)
 - **/arch-node-best**: Audits the codebase against the massive Node.js best practices compendium.
@@ -73,7 +82,8 @@ For every prompt involving coding, architecture, debugging, or planning:
 - **/sanity-check** *(formerly `wait-what`)*: Rapidly double-checks weird or confusing code to see if it actually makes sense.
 - **/feedback-loop** *(formerly `loop-me`)*: Keeps you in the loop with continuous feedback checkpoints as work progresses.
 
-### 3. Core Development & Engineering (11 Skills)
+### 3. Core Development & Engineering (12 Skills)
+- **/karpathy-guidelines**: Enforces Andrej Karpathy's 4 coding guardrails (think before coding, simplicity first, surgical changes, goal-driven execution).
 - **/dev-isolated**: Applies precise, isolated modifications to any part of the system (UI, Backend, Data) without causing collateral damage.
 - **/dev-prisma**: Designs type-safe relational database schemas and queries using Prisma best practices.
 - **/dev-authjs**: Implements secure, industry-standard authentication flows and session management using NextAuth/Auth.js.
@@ -95,10 +105,11 @@ For every prompt involving coding, architecture, debugging, or planning:
 - **/qa-quick-review** *(formerly `caveman-review`)*: Delivers an ultra-brief, one-line-per-finding quality check on code changes.
 - **/qa-scaffold** *(formerly `scaffold-exercises`)*: Generates structured test exercises, problems, and solutions for learning repos.
 
-### 5. Frontend, UI/UX & Design (27 Skills)
+### 5. Frontend, UI/UX & Design (28 Skills)
 - **/ui-master** *(formerly `impeccable`)*: Master design director for elevating visual design, usability, and UX.
 - **/taste-skill**: Anti-slop frontend art direction distilled from 247 curated gallery sites with browser verification loops.
 - **/ui-ux-pro-max**: Comprehensive design intelligence database (79 styles, 192 product palettes, 74 font pairings, 119 UX guidelines, 25 chart types).
+- **/ui-annotate**: Inspects live browser UI annotations dispatched via the Codex Annotator bridge and applies targeted modifications to the matching React component or page.
 - **/ui-init** *(formerly `impeccable-init`)*: Discovers brand identity and sets up design guidelines (`PRODUCT.md` & `DESIGN.md`).
 - **/ui-shape** *(formerly `impeccable-shape`)*: Plans screen layouts and user flows before writing any frontend code.
 - **/ui-critique** *(formerly `impeccable-critique`)*: Evaluates screens from a human user’s perspective for clunkiness and visual clutter.
@@ -181,13 +192,14 @@ For every prompt involving coding, architecture, debugging, or planning:
 - **/agent-ui-toggle** *(formerly `ui-plugin-navigation`)*: Adds one-click buttons in chat to open relevant side panels.
 - **/agent-migrate-skills** *(formerly `migrate-workflows`)*: Converts legacy workflow scripts into modern agent skills.
 
-### 11. Backend, Databases & Cloud Infrastructure (10 Skills)
+### 11. Backend, Databases & Cloud Infrastructure (11 Skills)
 - **/api-design**: Designs clean, standardized REST/GraphQL endpoints with consistent envelopes.
 - **/api-validate**: Implements strict input validation, sanitization, and Zod/Pydantic schemas.
 - **/db-schema**: Generates relational database schemas, migrations, and Prisma/Drizzle models.
 - **/db-query-opt**: Analyzes query execution plans, indexes, and eliminates N+1 query bottlenecks.
 - **/sec-auth**: Implements secure auth flows like JWT rotation, session cookies, and OAuth.
-- **/sec-audit**: Audits endpoints and configurations against OWASP Top 10 security risks.
+- **/sec-audit** *(formerly `security-audit`)*: Runs Cloudflare's 6-phase security audit and vulnerability discovery harness across codebases.
+- **/sec-skillspector**: Scans AI agent skills, MCP servers, and GitHub repos for prompt injection, exfiltration, and malicious code using NVIDIA SkillSpector.
 - **/ops-docker**: Crafts minimal, multi-stage Dockerfiles and local compose environments.
 - **/ops-ci-cd**: Builds automated GitHub Actions CI/CD test and deployment pipelines.
 - **/arch-queue**: Designs background worker jobs, queue retries, and scheduled workers.

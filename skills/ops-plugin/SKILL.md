@@ -19,6 +19,23 @@ For the underlying customization system — discovery roots, loading priority,
 what each customization type is for — see the customizations guide skill. This
 skill does not restate that material.
 
+## Quick Start
+
+After writing `/tmp/lsrpc.sh` in **Step 0**, prefix every `lsrpc` call with
+`source /tmp/lsrpc.sh &&` and key every mutation on `<dir>` (the install
+directory name `(.path | split("/") | last)` from Step 0, never `plugin.json`'s
+`name`):
+
+<!-- mdformat off -->
+| Operation | Command / Action | Key Guardrail |
+| :--- | :--- | :--- |
+| **Inventory installed plugins** (Step 0) | `source /tmp/lsrpc.sh && lsrpc GetAllPlugins '{"workspaceUris":["file:///path/to/workspace"]}' \| jq '[.plugins[] \| {name, dir: (.path \| split("/") \| last), disabled: (.disabled // false), isGlobal, skills: [.skills[]?.name], agents: [.agents[]?.name], rules: [.rules[]?.absolutePath], hooks: ((.hooksJson // "") \| length > 0), mcp: [.mcpServers[]?.name]}]'` | Never read `GetAllPlugins` unfiltered (inlines full `SKILL.md` text); always pipe through `jq` and use `dir` for mutations (`'{}'` if no workspace is active). |
+| **Enable / Disable plugin** (Step 2A) | `source /tmp/lsrpc.sh && lsrpc JetboxWriteState '{"userConfig":{"plugins":{"<dir>":{"enabled":true}}}}'` (`false` to disable) | Takes effect live (no restart). Never hand-edit `~/.gemini/config/config.json`. |
+| **Uninstall user plugin** (Step 2A) | `source /tmp/lsrpc.sh && lsrpc DeletePlugin '{"pluginId":"<dir>"}'` | Refuse if `.path` contains `/builtin/plugins/` (offer to disable instead). If currently disabled, set `"enabled":true` via `JetboxWriteState` before deleting. |
+| **Install Marketplace plugin** (Step 2A) | `source /tmp/lsrpc.sh && lsrpc InstallCustomization '{"id":"<marketplace-id>"}'` | Use `<marketplace-id>` from the Customizations page or user (never guess from `name`; only Marketplace plugins can be installed). Requires a restart. |
+| **Author / consolidate plugin** (Steps 2B–4) | Create `~/.gemini/config/plugins/<name>/plugin.json` (or in source repo if published) + used subdirectories (`skills/`, `agents/`, `rules/AGENTS.md`, `mcp_config.json`, `hooks.json`, `assets/logo.svg`) | Check Step 0 inventory for `name` collisions first; re-run Step 0 inventory, tell the user to restart, and link as `[<name>](customization://<dir>)` (never `plugin://`). |
+<!-- mdformat on -->
+
 ## Step 0: Preflight and inventory
 
 Every path needs to know what is already installed. Talk to the language server
@@ -47,11 +64,13 @@ lsrpc() {  # usage: lsrpc <MethodName> <json-body>
 EOF
 ```
 
-Now list the installed plugins. Prefix every `lsrpc` snippet in this skill with
+Now list the installed plugins, passing active workspace URIs in
+`workspaceUris` so workspace-scoped plugins are discovered (or `'{}'` when no
+workspace is active). Prefix every `lsrpc` snippet in this skill with
 `source /tmp/lsrpc.sh &&`:
 
 ```bash
-source /tmp/lsrpc.sh && lsrpc GetAllPlugins '{}' | jq '[.plugins[] | {
+source /tmp/lsrpc.sh && lsrpc GetAllPlugins '{"workspaceUris":["file:///path/to/workspace"]}' | jq '[.plugins[] | {
   name,
   dir: (.path | split("/") | last),
   disabled: (.disabled // false),
@@ -89,8 +108,8 @@ builds a garbage path.
 Resolve the target to its `dir` from the Step 0 inventory first. If the user's
 words match several plugins, ask which one rather than guessing.
 
-**Enable or disable.** This is the same write the Plugins page performs, and it
-takes effect live — no restart.
+**Enable or disable.** This is the same write the Customizations page performs,
+and it takes effect live — no restart.
 
 ```bash
 # Enable:
@@ -128,8 +147,8 @@ source /tmp/lsrpc.sh && lsrpc InstallCustomization '{"id":"<marketplace-id>"}'
 ```
 
 You cannot derive this ID from the plugin's name. Take it from the Marketplace
-tab of the Plugins page, or ask the user for it. If all you have is a name, say
-so rather than guessing an ID.
+tab of the Customizations page, or ask the user for it. If all you have is a
+name, say so rather than guessing an ID.
 
 A `source not found` error means one of two things: the ID is wrong, or the
 Marketplace catalog isn't launched for this user. The catalog case has a tell —
@@ -251,12 +270,19 @@ are always on while the plugin is enabled.
 :                    :          : shown in UI headers, cards, and slash        :
 :                    :          : command menus.                               :
 | `version`          | string   | Optional. Semantic version string.           |
+| `author`           | string / | Optional. Developer or team name string, or  |
+:                    : object   : an object with `name` and optional `url`     :
+:                    :          : (`https://`).                                :
+| `homepage`         | string   | Optional. External `https://` website or     |
+:                    :          : documentation URL.                           :
+| `repository`       | string / | Optional. Source repository `https://` URL   |
+:                    : object   : (or `{"type": "git", "url": "https://..."}`). :
 | `disabled`         | boolean  | Optional. Ships the plugin turned off. A     |
 :                    :          : choice the user has already made wins over   :
 :                    :          : this field.                                  :
 
-> **Do not add any other top-level field.** `author` and `homepage` are silently
-> discarded by the loader — they neither take effect nor error out.
+> **Do not add any other top-level field.** Unknown top-level fields are
+> silently discarded by the loader — they neither take effect nor error out.
 
 Offer to generate a logo with the `generate_image` tool. Ask for a square asset
 of at least 128x128 with a transparent background, high contrast so it reads on

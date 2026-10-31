@@ -5,6 +5,7 @@ import json
 
 ROOT_DIR = r"C:\Users\Mark Vasquez\Documents\Agent Skills"
 GLOBAL_SKILLS_DIR = r"C:\Users\Mark Vasquez\.gemini\config\skills"
+CODEX_SKILLS_DIR = r"C:\Users\Mark Vasquez\.codex\skills"
 BUILTIN_DIR = r"C:\Users\Mark Vasquez\.gemini\antigravity\builtin\skills"
 
 # Master 102 Reorganized Skills Map: (old_name -> (new_name, layman_description))
@@ -37,7 +38,8 @@ SKILL_MAP = {
     "wait-what": ("sanity-check", "Rapidly double-checks weird or confusing code to see if it actually makes sense."),
     "loop-me": ("feedback-loop", "Keeps you in the loop with continuous feedback checkpoints as work progresses."),
 
-    # 3. Core Development & Engineering (7)
+    # 3. Core Development & Engineering (9)
+    "karpathy-guidelines": ("karpathy-guidelines", "Enforces Andrej Karpathy's 4 coding guardrails: think before coding, simplicity first, surgical changes, and goal-driven execution."),
     "implement": ("dev-build", "Builds code strictly according to an agreed plan without adding unnecessary extras."),
     "implement-spec": ("dev-build-spec", "Builds a full feature straight from an approved technical blueprint."),
     "lean-build": ("dev-lean", "Builds the minimum viable version of a feature with strict stops to prevent over-engineering."),
@@ -86,6 +88,7 @@ SKILL_MAP = {
     "design-taste-frontend": ("design-taste-frontend", "Alias for /taste-skill. Tasteskill v2, the anti-slop frontend skill for intentional art direction and curated layouts."),
     "ui-ux-pro-max": ("ui-ux-pro-max", "UI/UX design intelligence database with 79 UI styles, 192 color palettes, 74 font pairings, 119 UX guidelines, and 25 chart types."),
     "ui-ux-pro-max-skill": ("ui-ux-pro-max-skill", "Alias for /ui-ux-pro-max. Design intelligence database with 79 UI styles, 192 color palettes, 74 font pairings, 119 UX guidelines, and 25 chart types."),
+    "ui-annotate": ("ui-annotate", "Inspects live browser UI annotations dispatched via the Codex Annotator bridge and applies targeted modifications to the matching React component or page."),
 
     # 6. Code Review, Refactoring & Cleanup (6)
     "code-review": ("review-deep", "Runs thorough parallel checks to ensure code matches requirements and high standards."),
@@ -146,13 +149,14 @@ SKILL_MAP = {
     "ui-plugin-navigation": ("agent-ui-toggle", "Adds one-click buttons in chat to open relevant side panels."),
     "migrate-workflows": ("agent-migrate-skills", "Converts legacy workflow scripts into modern agent skills."),
 
-    # 11. Backend, Databases & Cloud Infrastructure (10)
+    # 11. Backend, Databases & Cloud Infrastructure (11)
     "api-design": ("api-design", "Designs clean, standardized REST/GraphQL endpoints with consistent envelopes."),
     "api-validate": ("api-validate", "Implements strict input validation, sanitization, and Zod/Pydantic schemas."),
     "db-schema": ("db-schema", "Generates relational database schemas, migrations, and Prisma/Drizzle models."),
     "db-query-opt": ("db-query-opt", "Analyzes query execution plans, indexes, and eliminates N+1 query bottlenecks."),
     "sec-auth": ("sec-auth", "Implements secure auth flows like JWT rotation, session cookies, and OAuth."),
-    "sec-audit": ("sec-audit", "Audits endpoints and configurations against OWASP Top 10 security risks."),
+    "security-audit": ("sec-audit", "Runs Cloudflare's 6-phase security audit and vulnerability discovery harness across codebases (reconnaissance, hunting, adversarial verification, and guidance)."),
+    "sec-skillspector": ("sec-skillspector", "Scans AI agent skills, MCP servers, and GitHub repositories for prompt injection, data exfiltration, malicious code, and supply-chain CVEs using NVIDIA SkillSpector."),
     "ops-docker": ("ops-docker", "Crafts minimal, multi-stage Dockerfiles and local compose environments."),
     "ops-ci-cd": ("ops-ci-cd", "Builds automated GitHub Actions CI/CD test and deployment pipelines."),
     "arch-queue": ("arch-queue", "Designs background worker jobs, queue retries, and scheduled workers."),
@@ -252,6 +256,22 @@ def find_source_skill_dirs():
     if os.path.exists(iso_dir):
         sources["dev-isolated"] = iso_dir
 
+    # 11. Andrej Karpathy Skills
+    karpathy_dir = os.path.join(ROOT_DIR, "andrej-karpathy-skills", "skills")
+    if os.path.exists(karpathy_dir):
+        for item in os.listdir(karpathy_dir):
+            p = os.path.join(karpathy_dir, item)
+            if os.path.isdir(p) and os.path.exists(os.path.join(p, "SKILL.md")):
+                sources[item] = p
+
+    # 12. Cloudflare Security Audit Skill
+    cf_audit_dir = os.path.join(ROOT_DIR, "cloudflare-security-audit", "skills")
+    if os.path.exists(cf_audit_dir):
+        for item in os.listdir(cf_audit_dir):
+            p = os.path.join(cf_audit_dir, item)
+            if os.path.isdir(p) and os.path.exists(os.path.join(p, "SKILL.md")):
+                sources[item] = p
+
     # User-authored Codex skills in this repository take precedence over imported copies.
     custom_skills_dir = os.path.join(ROOT_DIR, "skills")
     if os.path.exists(custom_skills_dir):
@@ -275,37 +295,76 @@ def main():
         with open(meta_file, "r", encoding="utf-8") as f:
             impeccable_meta = json.load(f)
 
-    # Clean out old directories from GLOBAL_SKILLS_DIR that don't match our new target names
+    # Clean out old directories from GLOBAL_SKILLS_DIR and CODEX_SKILLS_DIR that don't match our target names
     expected_new_names = set(v[0] for v in SKILL_MAP.values())
+    codex_preserve = expected_new_names | {".system", "artifact-template-administrator-test-case-template"}
+    local_skills_dir = os.path.join(ROOT_DIR, "skills")
+    os.makedirs(CODEX_SKILLS_DIR, exist_ok=True)
+    os.makedirs(local_skills_dir, exist_ok=True)
+
     for item in os.listdir(GLOBAL_SKILLS_DIR):
         item_path = os.path.join(GLOBAL_SKILLS_DIR, item)
         if os.path.isdir(item_path) and item not in expected_new_names:
-            print(f"Removing old unmapped skill folder: {item}")
+            print(f"Removing old unmapped skill folder from Antigravity: {item}")
             shutil.rmtree(item_path, ignore_errors=True)
 
+    for item in os.listdir(CODEX_SKILLS_DIR):
+        item_path = os.path.join(CODEX_SKILLS_DIR, item)
+        if os.path.isdir(item_path) and item not in codex_preserve:
+            print(f"Removing old unmapped skill folder from Codex: {item}")
+            shutil.rmtree(item_path, ignore_errors=True)
+
+    sources = find_source_skill_dirs()
+    ignore_bytecode = shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo", ".pytest_cache", "*.test.cjs", "*.test.js", "*.test.ts")
     synced_count = 0
+
     for old_name, (new_name, layman_desc) in SKILL_MAP.items():
         dest_path = os.path.join(GLOBAL_SKILLS_DIR, new_name)
+        codex_dest_path = os.path.join(CODEX_SKILLS_DIR, new_name)
+        local_dest_path = os.path.join(local_skills_dir, new_name)
 
-        if old_name in sources:
-            src_path = sources[old_name]
-            # Copy source directory to target
-            shutil.copytree(src_path, dest_path, dirs_exist_ok=True)
+        # Strip any pre-existing __pycache__ in targets
+        for target_root in (dest_path, codex_dest_path, local_dest_path):
+            if os.path.exists(target_root):
+                for r, d_list, _ in os.walk(target_root):
+                    for d in d_list:
+                        if d in ("__pycache__", ".pytest_cache"):
+                            shutil.rmtree(os.path.join(r, d), ignore_errors=True)
+
+        if old_name in sources or new_name in sources:
+            src_path = sources.get(old_name) or sources.get(new_name)
+            # Copy source directory to target without bytecode
+            if os.path.abspath(src_path) != os.path.abspath(dest_path):
+                shutil.copytree(src_path, dest_path, dirs_exist_ok=True, ignore=ignore_bytecode)
             # Update SKILL.md frontmatter
             skill_md = os.path.join(dest_path, "SKILL.md")
             update_skill_frontmatter(skill_md, new_name, layman_desc)
+            # Sync to Codex skills and local skills folder
+            shutil.copytree(dest_path, codex_dest_path, dirs_exist_ok=True, ignore=ignore_bytecode)
+            if os.path.abspath(src_path) != os.path.abspath(local_dest_path):
+                shutil.copytree(dest_path, local_dest_path, dirs_exist_ok=True, ignore=ignore_bytecode)
             synced_count += 1
             print(f"Synced: {old_name} -> {new_name}")
 
         elif old_name.startswith("impeccable-"):
             cmd = old_name.replace("impeccable-", "")
+            # Remove any old duplicated reference/ folder inside individual ui-* wrappers
+            for target_root in (dest_path, codex_dest_path, local_dest_path):
+                ref_sub = os.path.join(target_root, "reference")
+                if os.path.exists(ref_sub):
+                    shutil.rmtree(ref_sub, ignore_errors=True)
             os.makedirs(dest_path, exist_ok=True)
             skill_md = os.path.join(dest_path, "SKILL.md")
 
+            shared_ref_dir = os.path.join(ROOT_DIR, "impeccable", "reference")
+            os.makedirs(shared_ref_dir, exist_ok=True)
+            src_ref_dir = os.path.join(impeccable_src, "reference")
+            if os.path.exists(src_ref_dir):
+                shutil.copytree(src_ref_dir, shared_ref_dir, dirs_exist_ok=True)
+
             native_ref = ""
-            impeccable_dest = os.path.join(GLOBAL_SKILLS_DIR, "ui-master")
-            if os.path.exists(os.path.join(impeccable_src, "reference", f"{cmd}.native.md")):
-                native_ref = f" (on native platforms: [reference/{cmd}.native.md](file:///C:/Users/Mark%20Vasquez/.gemini/config/skills/ui-master/reference/{cmd}.native.md))"
+            if os.path.exists(os.path.join(shared_ref_dir, f"{cmd}.native.md")):
+                native_ref = f" (on native platforms: `C:/Users/Mark Vasquez/Documents/Agent Skills/impeccable/reference/{cmd}.native.md`)"
 
             content = f"""---
 name: {new_name}
@@ -321,15 +380,16 @@ Execute Impeccable's **{cmd}** command workflow.
 
 1. **Context & Setup**:
    - Read `PRODUCT.md` and `DESIGN.md` directly from the project root.
-   - Before applying any frontend code edits, review [reference/craft-floor.md](file:///C:/Users/Mark%20Vasquez/.gemini/config/skills/ui-master/reference/craft-floor.md) to uphold the craftsmanship floor.
+   - Before applying any frontend code edits, review `C:/Users/Mark Vasquez/Documents/Agent Skills/impeccable/reference/craft-floor.md` to uphold the craftsmanship floor.
 
 2. **Playbook Execution**:
-   - Follow the primary playbook for this command:
-     [reference/{cmd}.md](file:///C:/Users/Mark%20Vasquez/.gemini/config/skills/ui-master/reference/{cmd}.md){native_ref}
+   - Follow the primary playbook for this command at `C:/Users/Mark Vasquez/Documents/Agent Skills/impeccable/reference/{cmd}.md`{native_ref}
    - Execute the steps specified in the playbook for the target component, page, or feature.
 """
             with open(skill_md, "w", encoding="utf-8") as f:
                 f.write(content)
+            shutil.copytree(dest_path, codex_dest_path, dirs_exist_ok=True, ignore=ignore_bytecode)
+            shutil.copytree(dest_path, local_dest_path, dirs_exist_ok=True, ignore=ignore_bytecode)
             synced_count += 1
             print(f"Generated Impeccable Command: {old_name} -> {new_name}")
 

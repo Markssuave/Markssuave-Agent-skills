@@ -11,6 +11,12 @@ customization root directory (e.g., `.agents/` in your project, or
 *   **Skills**: `skills.json`
 *   **Plugins**: `plugins.json`
 
+Inside a project, these files are honored in every `.agents/` directory between
+the current working directory and the project root, so a config file at the
+repository root applies no matter which subdirectory a session is started in.
+Relative `path` entries resolve against the directory containing the dot-dir
+that declares them, falling back to the project root when nothing exists there.
+
 ## Configuration Schema
 
 Both configuration files share the same schema, allowing you to declare path

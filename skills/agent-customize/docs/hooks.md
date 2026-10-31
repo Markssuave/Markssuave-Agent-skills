@@ -68,6 +68,8 @@ Each named hook supports:
 
 *   **`enabled`** (bool, optional): Defaults to `true`. Set to `false` to
     disable.
+*   **`SessionStart`** (array, optional): Handlers running once when a new
+    conversation session starts.
 *   **`PreToolUse`** (array, optional): Handlers running before a tool executes.
 *   **`PostToolUse`** (array, optional): Handlers running after a tool
     completes.
@@ -84,6 +86,9 @@ Each named hook supports:
 
 | Event            | When it fires     | Matcher target   | Structure         |
 | :--------------- | :---------------- | :--------------- | :---------------- |
+| `SessionStart`   | Once when a new   | N/A (ignored).   | Flat (list of     |
+:                  : session starts.   :                  : handler objects   :
+:                  :                   :                  : directly).        :
 | `PreToolUse`     | Before a tool     | Tool name (e.g., | Grouped (uses     |
 :                  : step executes.    : `run_command`).  : `matcher` &       :
 :                  :                   :                  : `hooks` wrapper). :
@@ -147,15 +152,18 @@ Every hook payload sent to `stdin` includes these common system metadata fields:
   "workspacePaths": ["/path/to/workspace"],
   "transcriptPath": "/path/to/workspace/.gemini/antigravity/transcript.jsonl",
   "artifactDirectoryPath": "/path/to/workspace/.gemini/antigravity/artifacts",
-  "modelName": "auto"
+  "modelName": "auto",
+  "lastUserInput": "Fix the failing unit test"
 }
+```
 
 > [!NOTE]
-> The `transcriptPath` and `artifactDirectoryPath` are product-specific. The example above uses `antigravity` (for Antigravity 2.0). Depending on the interface you are using, the directory name will differ:
-*   **CLI**: `antigravity-cli/`
-*   **Antigravity 2.0**: `antigravity/`
-*   **IDE**: `antigravity-ide/`
-```
+> The `transcriptPath` and `artifactDirectoryPath` are product-specific. The
+> example above uses `antigravity` (for Antigravity 2.0). Depending on the
+> interface you are using, the directory name will differ:
+> *   **CLI**: `antigravity-cli/`
+> *   **Antigravity 2.0**: `antigravity/`
+> *   **IDE**: `antigravity-ide/`
 
 --------------------------------------------------------------------------------
 
@@ -205,6 +213,7 @@ Use to gate, block, or audit tool executions.
 
         ```json
         {
+          "decision": "allow",
           "overwrite": {
             "CommandLine": "ls -la"
           }
@@ -226,6 +235,12 @@ Use for post-execution cleanup, auto-fixes, or analysis.
 
     ```json
     {
+      "toolCall": {
+        "name": "run_command",
+        "args": {
+          "CommandLine": "npm test"
+        }
+      },
       "stepIdx": 5,
       "error": "exit status 1", // Present if the tool failed
       ... (common fields)
@@ -236,7 +251,35 @@ Use for post-execution cleanup, auto-fixes, or analysis.
 
 --------------------------------------------------------------------------------
 
-### 3. `PreInvocation` Contract
+### 3. `SessionStart` Contract
+
+Use to inject welcome messages, initial instructions, or startup context once at
+the beginning of a new conversation session.
+
+*   **Input (stdin)**: Common system metadata fields (`conversationId`,
+    `workspacePaths`, `transcriptPath`, `artifactDirectoryPath`, `modelName`).
+
+*   **Output (stdout)**:
+
+    ```json
+    {
+      "injectSteps": [
+        {
+          "systemMessage": {
+            "systemMessage": "Welcome! Custom workspace environment is active."
+          }
+        }
+      ]
+    }
+    ```
+
+    *   **`injectSteps`** (array of objects, optional): Steps to inject at
+        session startup. Accepts the same step types as `PreInvocation` (see
+        below).
+
+--------------------------------------------------------------------------------
+
+### 4. `PreInvocation` Contract
 
 Use to inject context or instructions before the model runs.
 
@@ -264,13 +307,16 @@ Use to inject context or instructions before the model runs.
 
     *   **`injectSteps`** (array of objects, optional): Steps to inject.
         Supported step types:
-        *   `{"toolCall": {"name": "...", "args": {...}}}`
-        *   `{"userMessage": "..."}`
-        *   `{"ephemeralMessage": "..."}` (transient system message)
+        *   `{"systemMessage": {"systemMessage": "...", "metadata": {...}}}`
+            (persists in the conversation trajectory across turns; note that
+            `systemMessage` requires a nested object rather than a plain string)
+        *   `{"userMessage": "..."}` (plain string)
+        *   `{"ephemeralMessage": "..."}` (plain string; transient message
+            dropped after the current turn)
 
 --------------------------------------------------------------------------------
 
-### 4. `PostInvocation` Contract
+### 5. `PostInvocation` Contract
 
 Use to inspect model outputs and potentially force continuation.
 
@@ -284,7 +330,8 @@ Use to inspect model outputs and potentially force continuation.
     }
     ```
 
-    *   **`injectSteps`** (array, optional): Steps to inject.
+    *   **`injectSteps`** (array, optional): Steps to inject (same supported
+        step types as `PreInvocation`).
     *   **`terminationBehavior`** (string, optional):
         *   `"force_continue"`: Forces the execution loop to continue.
         *   `"terminate"`: Forces the loop to stop.
@@ -292,7 +339,7 @@ Use to inspect model outputs and potentially force continuation.
 
 --------------------------------------------------------------------------------
 
-### 5. `Stop` Contract
+### 6. `Stop` Contract
 
 Use to prevent the agent from stopping if goals are not met.
 
@@ -301,12 +348,25 @@ Use to prevent the agent from stopping if goals are not met.
     ```json
     {
       "executionNum": 1,
-      "terminationReason": "model_stop", // e.g., "model_stop", "max_steps_exceeded", "error"
+      "terminationReason": "NO_TOOL_CALL", // e.g., "NO_TOOL_CALL", "MAX_INVOCATIONS", "ERROR", "USER_CANCELED", "TERMINAL_STEP_TYPE"
       "error": "", // Present if stopped due to error
       "fullyIdle": true, // true if all background tasks are done
       ... (common fields)
     }
     ```
+    *   **`terminationReason`** (string): The `ExecutorTerminationReason` enum
+        name with the `EXECUTOR_TERMINATION_REASON_` prefix stripped:
+        *   `"NO_TOOL_CALL"`: Normal turn completion (model finished without
+            calling a tool).
+        *   `"MAX_INVOCATIONS"`: Hit the maximum invocation limit.
+        *   `"MAX_FORCED_INVOCATIONS"`: Hit the forced-continuation limit.
+        *   `"MAX_TOKEN_BUDGET_EXCEEDED"`: Exceeded the token budget.
+        *   `"ERROR"`: Execution terminated due to an error.
+        *   `"USER_CANCELED"`: Canceled by the user.
+        *   `"TERMINAL_STEP_TYPE"`: Stopped on a terminal step type.
+        *   `"TERMINAL_CUSTOM_HOOK"`: Terminated by a custom `PostInvocation`
+            hook.
+        *   `"INJECTED_RESPONSE"`: Terminated after an injected response.
 
 *   **Output (stdout)**:
 

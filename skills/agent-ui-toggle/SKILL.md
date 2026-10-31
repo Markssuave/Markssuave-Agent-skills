@@ -37,13 +37,17 @@ in its own `<sidecar-id>/` folder containing a `sidecar.json`):
 
 -   `~/.gemini/config/sidecars/<sidecar-id>/`
 -   `~/.gemini/<app-name>/builtin/sidecars/<sidecar-id>/`
--   `~/.gemini/config/plugins/<plugin>/sidecars/<sidecar-id>/`
--   `~/.gemini/<app-name>/builtin/plugins/<plugin>/sidecars/<sidecar-id>/`
+-   `~/.gemini/config/plugins/<plugin>/sidecars/<sidecar-id>/` (or external
+    sidecar folders referenced by
+    `~/.gemini/config/plugins/<plugin>/sidecars.json`)
+-   `~/.gemini/<app-name>/builtin/plugins/<plugin>/sidecars/<sidecar-id>/` (or
+    referenced by `~/.gemini/<app-name>/builtin/plugins/<plugin>/sidecars.json`)
 
 The **sidecar-id** is the folder name — except for **plugin** sidecars (those
-under a `plugins/<plugin>/sidecars/` directory), whose id is namespaced as
-`<plugin>/<sidecar-folder>`. A sidecar has a UI panel only if its `sidecar.json`
-has `has_web_ui` set to true and a `ui_config.views` entry with `entrypoint:
+under a `plugins/<plugin>/sidecars/` directory or referenced by a plugin's
+`sidecars.json`), whose id is namespaced as `<plugin>/<sidecar-folder>`. A
+sidecar has a UI panel only if its `sidecar.json` has `has_web_ui` set to true
+and a `ui_config.views` entry with `entrypoint:
 SIDECAR_UI_ENTRYPOINT_AUX_PANE`. From that entry take:
 
 -   **sidecar-id** — the folder name, or `<plugin>/<folder>` for plugin

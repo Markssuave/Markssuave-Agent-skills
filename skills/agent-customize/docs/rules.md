@@ -35,4 +35,6 @@ support frontmatter and are always active for their directory scope.
     share a dedicated 20,000-token rules budget (`defaultRulesBudget`),
     separate from the customization budget for skills, workflows, subagents,
     and MCP tools. Over-budget rules are demoted from full inline text to file
-    path pointers so the agent can read them on demand.
+    path pointers so the agent can read them on demand. Rules shipped by
+    builtin plugins are exempt from this budget and are always inlined in
+    full.

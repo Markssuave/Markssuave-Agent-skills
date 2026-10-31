@@ -26,7 +26,7 @@ server identifiers to their respective configurations.
 ## Configuration Schema
 
 Antigravity supports two transport mechanisms for MCP: **Stdio** (for local
-command-line tools) and **SSE** (for remote services).
+command-line tools) and **Streamable HTTP** (for remote services).
 
 ```json
 {
@@ -39,7 +39,7 @@ command-line tools) and **SSE** (for remote services).
       }
     },
     "remote-service": {
-      "serverUrl": "https://mcp.mycompany.com/sse"
+      "url": "https://mcp.mycompany.com/mcp"
     }
   }
 }
@@ -56,12 +56,19 @@ spawns the process and communicates with it over standard input/output.
 *   **`env`** (object, optional): Environment variables to inject into the
     server process.
 
-### 2. SSE Transport (Remote)
+### 2. Streamable HTTP Transport (Remote)
 
-Used to connect to a remote MCP server over HTTP using Server-Sent Events (SSE).
+Used to connect to a remote MCP server over the
+[Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http)
+transport.
 
-*   **`serverUrl`** (string, required): The HTTP(S) URL of the remote MCP
-    endpoint.
+*   **`url`** (string, required): The HTTP(S) URL of the remote MCP endpoint.
+    The legacy key `serverUrl` is also accepted.
+
+The legacy HTTP+SSE transport (MCP spec 2024-11-05) is not supported. Point
+`url` at the server's Streamable HTTP endpoint (often `/mcp` rather than
+`/sse`). For a server that only speaks legacy SSE, run a stdio bridge such as
+`mcp-remote` as a Stdio server instead.
 
 --------------------------------------------------------------------------------
 

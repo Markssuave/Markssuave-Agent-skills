@@ -4,5 +4,8 @@ __pycache__/
 *.pyd
 .DS_Store
 codex-annotator/latest_prompt.txt
-
 .taste-skill/
+.venv/
+**/.venv/
+*.log
+
