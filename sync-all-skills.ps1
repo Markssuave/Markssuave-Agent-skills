@@ -39,6 +39,27 @@ if (Test-Path "$cavemanDir\.git") {
     git -C $cavemanDir pull origin main
 }
 
+# 5b. Update Andrej Karpathy Skills
+$karpathyDir = "$rootDir\andrej-karpathy-skills"
+if (Test-Path "$karpathyDir\.git") {
+    Write-Host "`nUpdating Andrej Karpathy Skills..." -ForegroundColor Yellow
+    git -C $karpathyDir pull origin main
+}
+
+# 5c. Update NVIDIA SkillSpector
+$skillspectorDir = "$rootDir\SkillSpector"
+if (Test-Path "$skillspectorDir\.git") {
+    Write-Host "`nUpdating NVIDIA SkillSpector..." -ForegroundColor Yellow
+    git -C $skillspectorDir pull origin main
+}
+
+# 5d. Update Cloudflare Security Audit Skill
+$cfAuditDir = "$rootDir\cloudflare-security-audit"
+if (Test-Path "$cfAuditDir\.git") {
+    Write-Host "`nUpdating Cloudflare Security Audit Skill..." -ForegroundColor Yellow
+    git -C $cfAuditDir pull origin main
+}
+
 # 6. Ensure global skills directory exists
 if (!(Test-Path $globalSkillsDir)) {
     New-Item -ItemType Directory -Path $globalSkillsDir | Out-Null
@@ -56,14 +77,18 @@ Get-ChildItem -Path $globalSkillsDir | ForEach-Object {
 Write-Host "Reorganizing & Syncing All 102 Skills with Slash Commands..." -ForegroundColor Yellow
 python "$rootDir\sync_reorganized_skills.py"
 
-# 12. Ensure Global Rules (GEMINI.md & AGENTS.md) stay in sync
-Write-Host "Syncing Global Rules (GEMINI.md & AGENTS.md)..." -ForegroundColor Yellow
+# 12. Ensure Global Rules (GEMINI.md & AGENTS.md) stay in sync across Antigravity & Codex
+Write-Host "Syncing Global Rules (GEMINI.md & AGENTS.md) to Antigravity and Codex..." -ForegroundColor Yellow
 $globalConfigDir = "C:\Users\Mark Vasquez\.gemini\config"
+$codexConfigDir = "C:\Users\Mark Vasquez\.codex"
 if (Test-Path "$rootDir\GEMINI.md") {
     Copy-Item "$rootDir\GEMINI.md" "$globalConfigDir\GEMINI.md" -Force
 }
 if (Test-Path "$rootDir\AGENTS.md") {
     Copy-Item "$rootDir\AGENTS.md" "$globalConfigDir\AGENTS.md" -Force
+    if (Test-Path $codexConfigDir) {
+        Copy-Item "$rootDir\AGENTS.md" "$codexConfigDir\AGENTS.md" -Force
+    }
 }
 
 $totalActive = (Get-ChildItem $globalSkillsDir -Directory).Count
